@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Predictor de Potabilidad del Agua</title>
+</head>
+<body>
+    <h2>Predictor de Potabilidad del Agua</h2>
+    <form action="/predict" method="post">
+        ph: <input type="text" name="ph"><br>
+        Hardness: <input type="text" name="hardness"><br>
+        Solids: <input type="text" name="solids"><br>
+        Chloramines: <input type="text" name="chloramines"><br>
+        Sulfate: <input type="text" name="sulfate"><br>
+        Conductivity: <input type="text" name="conductivity"><br>
+        Organic Carbon: <input type="text" name="organic_carbon"><br>
+        Trihalomethanes: <input type="text" name="trihalomethanes"><br>
+        Turbidity: <input type="text" name="turbidity"><br>
+        <input type="submit" value="Predecir">
+    </form>
+    {% if prediction_text %}
+        <h3>{{ prediction_text }}</h3>
+    {% endif %}
+</body>
+</html>

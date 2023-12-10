@@ -1,29 +1,24 @@
-from flask import Flask, request, jsonify
-import pickle
+from flask import Flask, request, render_template
+import numpy as np
+import model
 
 app = Flask(__name__)
 
-# Cargar el modelo entrenado
-with open("../models/water_model.pkl", "rb") as file:
-    model = pickle.load(file)
-    
-# Ruta para realizar predicciones
+@app.route('/')
+def home():
+    return render_template('index.html')
+
+
 @app.route('/predict', methods=['POST'])
 def predict():
-    try:
-        # Obtener datos de entrada desde la solicitud POST
-        data = request.get_json()
+    # Recoge los valores del formulario
+    input_features = [float(x) for x in request.form.values()]
+    final_features = [np.array(input_features)]
+    prediction = model.predict(final_features)
 
-        # Realizar predicciones utilizando el modelo cargado
-        features = [data['ph'], data['Hardness'], data['Solids'], data['Chloramines'], data['Sulfate'], data['Conductivity'], data['Organic_carbon'], data['Trihalomethanes'], data['Turbidity']]
-        prediction = model.predict([features])[0]
+    output = round(prediction[0], 2)
 
-        # Devolver la predicción como JSON
-        result = {'potabilidad_agua': prediction}
-        return jsonify(result)
+    return render_template('index.html', prediction_text='La potabilidad del agua es: {}'.format(output))
 
-    except Exception as e:
-        return jsonify({'error': str(e)}), 400
-
-if __name__ == '__main__':
+if __name__ == "__main__":
     app.run(debug=True)
